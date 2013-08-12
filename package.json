@@ -1,0 +1,28 @@
+{
+  "name": "chromecast",
+  "version": "0.0.0",
+  "description": "ChromeCasting in Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/iceddev/chromecast"
+  },
+  "keywords": [
+    "chromecast"
+  ],
+  "author": "Blaine Bublitz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iceddev/chromecast/issues"
+  },
+  "dependencies": {
+    "node-ssdp": "0.0.2",
+    "xml2json": "~0.3.2",
+    "st": "~0.2.1",
+    "rest": "~0.9.3",
+    "ws": "~0.4.27"
+  }
+}
