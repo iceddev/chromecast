@@ -5,6 +5,21 @@ http.createServer(
   st(process.cwd())
 ).listen(1337);
 
+var os = require('os');
+var ifaces = os.networkInterfaces();
+
+var myip = '';
+
+for(var key in ifaces){
+  var iface = ifaces[key];
+  iface.forEach(function(details){
+    // console.log(details);
+    if(details.family === 'IPv4' && !details.internal){
+      myip = details.address;
+    }
+  });
+}
+
 var rest = require('rest');
 var mime = require('rest/interceptor/mime');
 
@@ -108,7 +123,7 @@ client.on('response', function (msg, rinfo) {
             var interval = 0;
             socket.on('open', function(){
               var message = JSON.stringify(["cv",{"type":"launch_service","message":{"action":"launch","activityType":"video_playback","activityId":"g9rh2radmgcw","initParams":{
-                videoUrl: "http://192.168.222.197:1337/small.mp4",
+                videoUrl: "http://" + myip + ":1337/small.mp4",
                 currentTime: 0,
                 duration: 0,
                 paused: false, //request play
