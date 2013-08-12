@@ -52,9 +52,9 @@ client.on('response', function (msg, rinfo) {
       object: true
     });
 
-    if(json.root.device.friendlyName !== 'phated-chromecast'){
-      return;
-    }
+    // if(json.root.device.friendlyName !== 'phated-chromecast'){
+    //   return;
+    // }
 
     console.log(json);
 
