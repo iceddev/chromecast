@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/iceddev/chromecast"
+    "url": "git://github.com/phated/chromecast-hacking"
   },
   "keywords": [
     "chromecast"
@@ -16,7 +16,7 @@
   "author": "Blaine Bublitz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iceddev/chromecast/issues"
+    "url": "https://github.com/phated/chromecast-hacking/issues"
   },
   "dependencies": {
     "node-ssdp": "0.0.2",
