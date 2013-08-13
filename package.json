@@ -1,6 +1,6 @@
 {
   "name": "chromecast",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ChromeCasting in Node",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/phated/chromecast-hacking"
+    "url": "git://github.com/iceddev/chromecast"
   },
   "keywords": [
     "chromecast"
@@ -16,13 +16,12 @@
   "author": "Blaine Bublitz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/phated/chromecast-hacking/issues"
+    "url": "https://github.com/iceddev/chromecast/issues"
   },
   "dependencies": {
-    "node-ssdp": "0.0.2",
-    "xml2json": "~0.3.2",
-    "st": "~0.2.1",
     "rest": "~0.9.3",
-    "ws": "~0.4.27"
+    "ws": "~0.4.27",
+    "dial": "0.0.1",
+    "when": "~2.3.0"
   }
 }
