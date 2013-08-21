@@ -19,9 +19,9 @@
     "url": "https://github.com/iceddev/chromecast/issues"
   },
   "dependencies": {
-    "rest": "~0.9.3",
-    "ws": "~0.4.27",
-    "dial": "0.0.1",
-    "when": "~2.3.0"
+    "dial": "0.0.1"
+  },
+  "devDependencies": {
+    "ws": "~0.4.28"
   }
 }
