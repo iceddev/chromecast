@@ -1,6 +1,6 @@
 {
   "name": "chromecast",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ChromeCasting in Node",
   "main": "index.js",
   "scripts": {
