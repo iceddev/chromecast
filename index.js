@@ -1,75 +1,63 @@
-var delay = require('when/delay');
-var rest = require('rest');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
+
 var mime = require('rest/interceptor/mime');
 
-var WebSocket = require('ws');
-var dial = require('dial')();
+var Dial = require('dial');
 
-dial.on('device', function(device){
+function Chromecast(){
+  if(!(this instanceof Chromecast)) return new Chromecast();
 
-  var client = this.client
-    .chain(mime, { mime: 'application/json' });
+  var self = this;
 
-  if(device.root.device.modelName !== 'Eureka Dongle'){
-    return;
-  }
+  EventEmitter.call(self);
 
-  dial.launch('ChromeCast', {
-    v: 'release-9e8c585405ea9a5cecd82885e8e35d28a16609c6',
-    id: 'local:3',
-    idle: 'windowclose'
-  }).then(function(){
-    // if we do a request right after launch, we don't get the needed info
-    // so delay by 1 second
-    return delay(1000);
-  }, function(err){
-    console.log(err);
-  }).then(function(){
-    return dial.appInfo();
-  }).then(function(appInfo){
+  self.dial = Dial();
 
-    var connectionUrl = appInfo.service.servicedata.connectionSvcURL;
-    if(!connectionUrl){
+  self.dial.on('device', function(device){
+    if(device.root.device.modelName !== 'Eureka Dongle'){
+      // Not a Chromecast
       return;
     }
 
-    return client({
-      path: connectionUrl,
-      entity: {
-        channel: 0
-      }
-    });
-  }).then(function(resp){
+    self.client = self.dial.client
+      .chain(mime, { mime: 'application/json' });
 
-    var socket = new WebSocket(resp.entity.URL);
-    socket.on('open', function(){
-      var message = JSON.stringify(["cv",{
-        "type":"launch_service",
-        "message":{
-          "action":"launch",
-          "activityType":
-          "video_playback",
-          "activityId":"1zmakgx2pneu",
-          "initParams":{
-            videoUrl: "http://techslides.com/demos/sample-videos/small.mp4",
-            currentTime: 0,
-            duration: 0,
-            paused: false, //request play
-            muted: false,
-            volume: 0.8
-          }
-        }
-      }]);
-      console.log('sending:   ', message);
-      socket.send(message);
-    });
-    socket.on('message', function(data){
-      console.log('receiving: ', data);
-      var pong = JSON.stringify(["cm",{"type":"pong"}]);
-      console.log('sending:   ', pong);
-      socket.send(pong);
-    });
+    self.emit('device', device);
   });
-});
 
-dial.discover();
+}
+
+util.inherits(Chromecast, EventEmitter);
+
+Chromecast.prototype.discover = function(){
+  this.dial.discover();
+};
+
+Chromecast.prototype.launch = function(applicationName, data, cb){
+  // TODO: check valid app
+  return this.dial.launch(applicationName, data, cb);
+};
+
+Chromecast.prototype.appInfo = function(applicationResourceUrl, cb){
+  return this.dial.appInfo(applicationResourceUrl, cb);
+};
+
+Chromecast.prototype.connectionUrl = function(appInfo){
+  var self = this;
+  var url = appInfo.service.servicedata.connectionSvcURL;
+  if(!url){
+    return this.appInfo().then(function(appInfo){
+      return self.connectionUrl(appInfo);
+    });
+  }
+
+  return this.client({
+    path: url,
+    entity: {
+      channel: 0
+    }
+  });
+};
+
+module.exports = Chromecast;
