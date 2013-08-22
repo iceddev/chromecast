@@ -1,8 +1,8 @@
 var chromecast = require('../')();
 
-chromecast.on('device', function(){
+chromecast.on('device', function(device){
 
-  this.launch('YouTube', {
+  device.launch('YouTube', {
     v: 'cKG5HDyTW8o'
   }).then(function(){
     console.log('Watch Your TV!');

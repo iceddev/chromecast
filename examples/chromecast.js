@@ -1,14 +1,14 @@
 var WebSocket = require('ws');
 var chromecast = require('../')();
 
-chromecast.on('device', function(){
+chromecast.on('device', function(device){
 
-  this.launch('ChromeCast', {
+  device.launch('ChromeCast', {
     v: 'release-9e8c585405ea9a5cecd82885e8e35d28a16609c6'
   }).then(function(){
-    return chromecast.appInfo();
+    return device.appInfo();
   }).then(function(appInfo){
-    return chromecast.connectionUrl(appInfo);
+    return device.connectionUrl(appInfo);
   }).then(function(resp){
 
     var socket = new WebSocket(resp.entity.URL);
