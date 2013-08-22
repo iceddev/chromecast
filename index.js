@@ -1,9 +1,30 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
+var rest = require('rest');
 var mime = require('rest/interceptor/mime');
 
-var Dial = require('dial');
+var dial = require('dial');
+
+function connectionUrl(appInfo){
+  var self = this;
+
+  var client = rest.chain(mime, { mime: 'application/json' });
+
+  var url = appInfo.service.servicedata.connectionSvcURL;
+  if(!url){
+    return this.appInfo().then(function(appInfo){
+      return self.connectionUrl(appInfo);
+    });
+  }
+
+  return client({
+    path: url,
+    entity: {
+      channel: 0
+    }
+  });
+}
 
 function Chromecast(){
   if(!(this instanceof Chromecast)) return new Chromecast();
@@ -12,16 +33,14 @@ function Chromecast(){
 
   EventEmitter.call(self);
 
-  self.dial = Dial();
-
-  self.dial.on('device', function(device){
-    if(device.root.device.modelName !== 'Eureka Dongle'){
+  dial.on('device', function(device){
+    if(device.model !== 'Eureka Dongle'){
       // Not a Chromecast
       return;
     }
 
-    self.client = self.dial.client
-      .chain(mime, { mime: 'application/json' });
+    // Add connectionUrl method to a device
+    device.connectionUrl = connectionUrl;
 
     self.emit('device', device);
   });
@@ -31,33 +50,7 @@ function Chromecast(){
 util.inherits(Chromecast, EventEmitter);
 
 Chromecast.prototype.discover = function(){
-  this.dial.discover();
-};
-
-Chromecast.prototype.launch = function(applicationName, data, cb){
-  // TODO: check valid app
-  return this.dial.launch(applicationName, data, cb);
-};
-
-Chromecast.prototype.appInfo = function(applicationResourceUrl, cb){
-  return this.dial.appInfo(applicationResourceUrl, cb);
-};
-
-Chromecast.prototype.connectionUrl = function(appInfo){
-  var self = this;
-  var url = appInfo.service.servicedata.connectionSvcURL;
-  if(!url){
-    return this.appInfo().then(function(appInfo){
-      return self.connectionUrl(appInfo);
-    });
-  }
-
-  return this.client({
-    path: url,
-    entity: {
-      channel: 0
-    }
-  });
+  dial.discover();
 };
 
 module.exports = Chromecast;
