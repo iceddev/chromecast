@@ -18,11 +18,11 @@ A Chromecast object is an event emitter.
 
 #### device
 
-Emits an event when a device is found. Receives device info (may or may not be relevant).
+Emits an event when a device is found. Receives a Device object.
 
 ```javascript
 chromecast.on('device', function(device){
-  // device contains device info
+  // device is the chromecast device
 });
 ```
 
@@ -34,13 +34,17 @@ Chromecast starts looking for devices.
 chromecast.discover();
 ```
 
+### Device
+
+A Chromecast Device object
+
 ### launch
 
-Chromecast launches an app with given data.
+Device launches an app with given data.
 
 ```javascript
-chromecast.on('device', function(){
-  this.launch('YouTube', {
+chromecast.on('device', function(device){
+  device.launch('YouTube', {
     v: 'cKG5HDyTW8o'
   });
 });
@@ -48,14 +52,14 @@ chromecast.on('device', function(){
 
 ### appInfo
 
-Chromecast retrieves info about app.
+Device retrieves info about app.
 
 ```javascript
-chromecast.on('device', function(){
-  this.launch('ChromeCast', {
+chromecast.on('device', function(device){
+  device.launch('ChromeCast', {
     v: 'release-9e8c585405ea9a5cecd82885e8e35d28a16609c6'
   }).then(function(){
-    return chromecast.appInfo();
+    return device.appInfo();
   }).then(function(appInfo){
     console.log(appInfo);
   });
@@ -64,16 +68,16 @@ chromecast.on('device', function(){
 
 ### connectionUrl
 
-Chromecast retrieves the connection url for app.
+Device retrieves the connection url for app.
 
 ```javascript
-chromecast.on('device', function(){
-  this.launch('ChromeCast', {
+chromecast.on('device', function(device){
+  device.launch('ChromeCast', {
     v: 'release-9e8c585405ea9a5cecd82885e8e35d28a16609c6'
   }).then(function(){
-    return chromecast.appInfo();
+    return device.appInfo();
   }).then(function(appInfo){
-    return chromecast.connectionUrl(appInfo);
+    return device.connectionUrl(appInfo);
   }).then(function(connectionUrl){
     console.log(connectionUrl);
   });
